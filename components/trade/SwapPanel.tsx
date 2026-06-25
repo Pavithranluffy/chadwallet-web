@@ -22,9 +22,9 @@ interface Quote {
 const BUY_PRESETS = [0.1, 0.5, 1, 5];
 const SELL_PRESETS = [25, 50, 100];
 
-export function SwapPanel({ token }: { token?: Token }) {
+export function SwapPanel({ token, initialSide = "buy" }: { token?: Token; initialSide?: Side }) {
   const auth = useAuth();
-  const [side, setSide] = useState<Side>("buy");
+  const [side, setSide] = useState<Side>(initialSide);
   const [amount, setAmount] = useState("");
   const [slippage, setSlippage] = useState(1);
   const [showSlip, setShowSlip] = useState(false);

@@ -9,7 +9,7 @@ import { APP } from "@/lib/constants";
 
 export function CtaSection() {
   return (
-    <section className="mx-auto max-w-[1100px] px-4 py-24 sm:px-6">
+    <section className="mx-auto max-w-[1100px] px-4 py-16 sm:px-6 sm:py-24">
       <Reveal className="chad-glow grain relative overflow-hidden rounded-3xl border border-chad/20 bg-panel/50 px-6 py-16 text-center">
         <div className="grid-bg pointer-events-none absolute inset-0 opacity-60" />
         <div className="relative">

@@ -107,7 +107,9 @@ export function HeroPreview() {
                 </span>
                 <span className="tnum flex-1 text-ink">{formatUsd(t.amountUsd, { compact: true })}</span>
                 <span className="font-mono text-[10px] text-ink-faint">{shortAddr(t.owner, 3)}</span>
-                <span className="tnum w-7 text-right text-ink-faint">{timeAgo(t.time)}</span>
+                <span className="tnum w-7 text-right text-ink-faint" suppressHydrationWarning>
+                  {timeAgo(t.time)}
+                </span>
               </div>
             ))}
           </div>

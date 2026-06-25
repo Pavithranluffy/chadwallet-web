@@ -36,7 +36,7 @@ export function Hero() {
             The #1 meme coin trading app on Solana
           </div>
 
-          <h1 className="font-display mt-6 text-[2.75rem] font-bold leading-[0.95] tracking-tight sm:text-6xl lg:text-[4.25rem]">
+          <h1 className="font-display mt-6 text-[2.05rem] font-bold leading-[1.02] tracking-tight sm:text-6xl sm:leading-[0.95] lg:text-[4.25rem]">
             <span className="block overflow-hidden pb-1">
               <span className="anim-line block" style={{ animationDelay: "0.15s" }}>
                 Hunt every

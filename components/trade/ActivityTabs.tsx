@@ -57,7 +57,9 @@ function TradesTable({ mint }: { mint: string }) {
             <td className="hidden px-4 py-2 text-right font-mono text-xs text-ink-faint sm:table-cell">
               {shortAddr(t.owner, 4)}
             </td>
-            <td className="tnum px-4 py-2 text-right text-ink-faint">{timeAgo(t.time)}</td>
+            <td className="tnum px-4 py-2 text-right text-ink-faint" suppressHydrationWarning>
+              {timeAgo(t.time)}
+            </td>
           </tr>
         ))}
       </tbody>

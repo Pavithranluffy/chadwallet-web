@@ -1,9 +1,9 @@
 # ChadWallet — Web
 
 A fomo.family-style landing page **and** a full Solana trading terminal for the
-ChadWallet brand. Built with Next.js 16 (App Router) + Tailwind v4, animated with
-GSAP, and powered by live data from BirdEye, Jupiter and an RPC of your choice —
-with a deterministic mock layer so the whole app is alive even with no keys set.
+ChadWallet brand. Built with Next.js 16 (App Router) + Tailwind v4, and powered by
+live data from BirdEye, Jupiter and an RPC of your choice — with a deterministic
+mock layer so the whole app is alive even with no keys set.
 
 ## Run locally
 
@@ -68,9 +68,12 @@ falls back to the mock layer, so the UI is never empty.
   "Live on Solana" grid and trade panels are populated in the first HTML byte —
   no loading flash and no dependency on a client fetch succeeding. SWR then
   revalidates in the background. Pages are ISR-cached (`revalidate = 30`).
-- **Motion** is concentrated in one orchestrated hero entrance (GSAP timeline)
-  plus disciplined scroll reveals (`components/motion/`). All motion respects
-  `prefers-reduced-motion`.
+- **Motion** is a hybrid by design: critical content (hero text, buttons, scroll
+  reveals, stat count-ups) uses pure **CSS animations + IntersectionObserver**, so
+  it always ends visible and ships almost no JS. The one **signature** moment — the
+  pinned, horizontally-scrubbed "trade flow" rail — uses **GSAP ScrollTrigger**,
+  scoped via `gsap.matchMedia` to large, motion-safe screens (swipeable fallback
+  elsewhere). All motion respects `prefers-reduced-motion`.
 - **Swaps** are routed through Jupiter; transactions are signed and sent by the
   Privy embedded Solana wallet. Without a wallet (demo), fills are simulated and
   recorded to a local position ledger so the buy/sell loop is fully demonstrable.

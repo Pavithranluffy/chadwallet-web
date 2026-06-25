@@ -36,7 +36,7 @@ const FEATURES = [
 
 export function Features() {
   return (
-    <section className="mx-auto max-w-[1200px] px-4 py-24 sm:px-6">
+    <section className="mx-auto max-w-[1200px] px-4 py-16 sm:px-6 sm:py-24">
       <Reveal className="mx-auto max-w-2xl text-center">
         <div className="mb-3 text-xs font-medium uppercase tracking-[0.2em] text-chad">
           Built for degens

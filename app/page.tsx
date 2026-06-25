@@ -6,6 +6,7 @@ import { TrendingProvider } from "@/components/TrendingProvider";
 import { Hero } from "@/components/landing/Hero";
 import { Stats } from "@/components/landing/Stats";
 import { Features } from "@/components/landing/Features";
+import { TradeFlow } from "@/components/landing/TradeFlow";
 import { TrendingShowcase } from "@/components/landing/TrendingShowcase";
 import { CtaSection } from "@/components/landing/CtaSection";
 import { getTrending } from "@/lib/birdeye";
@@ -31,6 +32,7 @@ export default async function HomePage() {
         <Hero />
         <Stats />
         <Features />
+        <TradeFlow />
         <TrendingShowcase />
         <CtaSection />
       </main>

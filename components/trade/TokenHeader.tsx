@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Copy, Check, ExternalLink, Globe, AtSign } from "lucide-react";
 import { TokenLogo } from "@/components/ui/TokenLogo";
+import { SafetyBadge } from "./SafetyBadge";
 import { changeColor, compact, formatPct, formatUsd, shortAddr } from "@/lib/format";
 import { cn } from "@/lib/cn";
 import type { Token } from "@/lib/types";
@@ -66,11 +67,12 @@ export function TokenHeader({ token }: { token?: Token }) {
           </div>
         </div>
 
-        <div className="flex items-end gap-3">
+        <div className="flex items-center gap-3">
           <div className="font-display tnum text-2xl font-bold text-ink">{formatUsd(token.price)}</div>
-          <div className={cn("tnum mb-1 text-sm font-semibold", changeColor(token.priceChange24h))}>
+          <div className={cn("tnum text-sm font-semibold", changeColor(token.priceChange24h))}>
             {formatPct(token.priceChange24h)}
           </div>
+          <SafetyBadge token={token} />
         </div>
 
         <div className="ml-auto flex flex-wrap items-center gap-x-6 gap-y-3">

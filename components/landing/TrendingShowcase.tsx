@@ -13,7 +13,7 @@ export function TrendingShowcase() {
   const display = isLoading && !tokens.length ? Array.from({ length: 8 }) : tokens.slice(0, 8);
 
   return (
-    <section className="mx-auto max-w-[1200px] px-4 py-24 sm:px-6">
+    <section className="mx-auto max-w-[1200px] px-4 py-16 sm:px-6 sm:py-24">
       <Reveal className="flex items-end justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 text-chad">
@@ -36,7 +36,7 @@ export function TrendingShowcase() {
         </Link>
       </Reveal>
 
-      <Reveal stagger={0.06} className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <Reveal stagger={0.06} className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {display.map((t, i) =>
           t ? (
             <Link
