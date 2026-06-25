@@ -1,26 +1,84 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ===== ChadWallet brand tokens =====
+   Pulled from chadwallet.xyz: bg #080404, panels #101010, accent #ccff00 */
+@theme {
+  --color-base: #080404;
+  --color-base-2: #0d0a0a;
+  --color-panel: #101010;
+  --color-panel-2: #161616;
+  --color-line: #232323;
+  --color-line-2: #2e2e2e;
+
+  --color-ink: #f5f5f0;
+  --color-ink-dim: #a8a8a2;
+  --color-ink-faint: #6b6b66;
+
+  --color-chad: #ccff00;
+  --color-chad-dim: #9bc400;
+  --color-chad-glow: #ccff0033;
+
+  --color-up: #19e08a;
+  --color-up-soft: #19e08a1a;
+  --color-down: #ff4d5e;
+  --color-down-soft: #ff4d5e1a;
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  --radius: 0.875rem;
+
+  --animate-marquee: marquee 40s linear infinite;
+  --animate-marquee-rev: marquee-rev 40s linear infinite;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes marquee-rev {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  border-color: var(--color-line);
+}
+
+html {
+  background: var(--color-base);
+  color-scheme: dark;
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-base);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Numeric/tabular figures for prices */
+.tnum {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* Hide scrollbars where we manage our own scroll regions */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+.scroll-thin::-webkit-scrollbar { width: 8px; height: 8px; }
+.scroll-thin::-webkit-scrollbar-thumb { background: var(--color-line-2); border-radius: 99px; }
+.scroll-thin::-webkit-scrollbar-track { background: transparent; }
+
+/* Subtle radial glow used behind hero + section headers */
+.chad-glow {
+  background:
+    radial-gradient(60% 60% at 50% 0%, #ccff0014 0%, transparent 70%),
+    radial-gradient(40% 40% at 80% 30%, #19e08a0f 0%, transparent 70%);
+}
+
+.pause-on-hover:hover [class*="animate-marquee"] {
+  animation-play-state: paused;
 }

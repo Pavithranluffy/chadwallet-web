@@ -1,0 +1,64 @@
+"use client";
+
+import Link from "next/link";
+import { TrendingUp, ArrowRight } from "lucide-react";
+import { useTrending } from "@/lib/client";
+import { TokenLogo } from "@/components/ui/TokenLogo";
+import { changeColor, compact, formatPct, formatUsd } from "@/lib/format";
+import { cn } from "@/lib/cn";
+
+export function TrendingShowcase() {
+  const { tokens, isLoading } = useTrending(12);
+  const display = isLoading && !tokens.length ? Array.from({ length: 8 }) : tokens.slice(0, 8);
+
+  return (
+    <section className="mx-auto max-w-[1200px] px-4 py-20 sm:px-6">
+      <div className="flex items-end justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2 text-chad">
+            <TrendingUp className="h-5 w-5" />
+            <span className="text-sm font-semibold uppercase tracking-wider">Trending now</span>
+          </div>
+          <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">Live on Solana</h2>
+        </div>
+        <Link
+          href="/trade"
+          className="hidden items-center gap-1.5 text-sm font-medium text-ink-dim transition-colors hover:text-chad sm:flex"
+        >
+          View all <ArrowRight className="h-4 w-4" />
+        </Link>
+      </div>
+
+      <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {display.map((t, i) =>
+          t ? (
+            <Link
+              key={(t as { address: string }).address}
+              href={`/trade/${(t as { address: string }).address}`}
+              className="group rounded-2xl border border-line bg-panel/50 p-4 transition-all hover:-translate-y-0.5 hover:border-chad/40 hover:bg-panel"
+            >
+              <div className="flex items-center gap-3">
+                <TokenLogo symbol={(t as { symbol: string }).symbol} src={(t as { logoURI?: string }).logoURI} size={40} />
+                <div className="min-w-0">
+                  <div className="truncate font-semibold text-ink">{(t as { symbol: string }).symbol}</div>
+                  <div className="truncate text-xs text-ink-faint">{(t as { name: string }).name}</div>
+                </div>
+              </div>
+              <div className="mt-4 flex items-end justify-between">
+                <div className="tnum text-lg font-semibold text-ink">{formatUsd((t as { price: number }).price)}</div>
+                <div className={cn("tnum text-sm font-medium", changeColor((t as { priceChange24h: number }).priceChange24h))}>
+                  {formatPct((t as { priceChange24h: number }).priceChange24h)}
+                </div>
+              </div>
+              <div className="mt-1 text-xs text-ink-faint">
+                Vol ${compact((t as { volume24h: number }).volume24h)} · MC ${compact((t as { marketCap: number }).marketCap)}
+              </div>
+            </Link>
+          ) : (
+            <div key={i} className="h-[132px] animate-pulse rounded-2xl border border-line bg-panel/40" />
+          ),
+        )}
+      </div>
+    </section>
+  );
+}
