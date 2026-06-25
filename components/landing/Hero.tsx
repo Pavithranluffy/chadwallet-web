@@ -2,16 +2,17 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Rocket, ArrowRight, ShieldCheck, Zap, Star } from "lucide-react";
+import { ArrowRight, ShieldCheck, Zap, Star } from "lucide-react";
 import { useAuth } from "@/app/providers";
 import { Button } from "@/components/ui/Button";
 import { HeroPreview } from "./HeroPreview";
+import { StartTradingButton } from "./StartTradingButton";
 import { APP } from "@/lib/constants";
 
 const TRUST = [
   { icon: ShieldCheck, label: "Non-custodial" },
   { icon: Zap, label: "Jupiter best-price routing" },
-  { icon: Star, label: "4.8★ on App Store" },
+  { icon: Star, label: "4.8 on App Store" },
 ];
 
 export function Hero() {
@@ -24,7 +25,7 @@ export function Hero() {
 
       <div className="relative mx-auto grid max-w-[1280px] items-center gap-12 px-4 pb-16 pt-16 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:pb-24 lg:pt-24">
         {/* Left — copy */}
-        <div className="text-center lg:text-left">
+        <div className="min-w-0 text-center lg:text-left">
           <div
             className="anim-up inline-flex items-center gap-2 rounded-full border border-chad/25 bg-chad/[0.06] px-4 py-1.5 text-xs font-medium text-chad"
             style={{ animationDelay: "0.05s" }}
@@ -69,20 +70,15 @@ export function Hero() {
             className="anim-up mt-8 flex flex-col items-center gap-3 sm:flex-row lg:justify-start"
             style={{ animationDelay: "0.6s" }}
           >
-            <Link href="/trade" className="w-full sm:w-auto">
-              <Button size="lg" className="btn-shine w-full sm:w-auto">
-                <Rocket className="h-5 w-5" />
-                Start trading
-              </Button>
-            </Link>
+            <StartTradingButton />
             <Button
               size="lg"
               variant="outline"
-              className="w-full sm:w-auto"
+              className="group w-full sm:w-auto"
               onClick={auth.authenticated ? undefined : auth.login}
             >
               {auth.authenticated ? "Wallet connected" : "Sign in with Apple / Google"}
-              <ArrowRight className="h-4 w-4" />
+              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
             </Button>
           </div>
 
@@ -92,9 +88,12 @@ export function Hero() {
             style={{ animationDelay: "0.7s" }}
           >
             {TRUST.map((t) => (
-              <div key={t.label} className="flex items-center gap-1.5 text-xs text-ink-faint">
-                <t.icon className="h-3.5 w-3.5 text-chad/70" />
-                {t.label}
+              <div
+                key={t.label}
+                className="flex items-center gap-1.5 whitespace-nowrap text-xs leading-none text-ink-faint"
+              >
+                <t.icon className="h-3.5 w-3.5 shrink-0 text-chad/70" />
+                <span>{t.label}</span>
               </div>
             ))}
           </div>
@@ -131,7 +130,7 @@ export function Hero() {
 
         {/* Right — live product preview */}
         <div
-          className="anim-side mx-auto w-full max-w-[400px] lg:max-w-none"
+          className="anim-side mx-auto w-full min-w-0 max-w-[400px] lg:max-w-none"
           style={{ animationDelay: "0.35s" }}
         >
           <HeroPreview />

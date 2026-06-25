@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LineChart, Apple, Play } from "lucide-react";
+import { LineChart, Play } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
+import { AppleLogo } from "@/components/ui/AppleLogo";
 import { AuthButton } from "@/components/AuthButton";
 import { APP } from "@/lib/constants";
 import { cn } from "@/lib/cn";
@@ -44,7 +45,7 @@ export function Header() {
             className="hidden h-9 items-center gap-1.5 rounded-lg border border-line-2 px-3 text-sm text-ink-dim transition-colors hover:border-chad/40 hover:text-ink lg:flex"
             aria-label="Download on the App Store"
           >
-            <Apple className="h-4 w-4" /> iOS
+            <AppleLogo className="h-4 w-4" /> iOS
           </Link>
           <Link
             href={APP.playStore}

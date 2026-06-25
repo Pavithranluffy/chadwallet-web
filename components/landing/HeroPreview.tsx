@@ -52,11 +52,11 @@ export function HeroPreview() {
   const closes = candles.slice(-44).map((c) => c.close);
 
   return (
-    <div ref={root} className="relative [perspective:1400px]">
+    <div ref={root} className="relative max-w-full [perspective:1400px]">
       <div className="chad-glow pointer-events-none absolute -inset-8" />
       <div
         data-tilt
-        className="border-grad relative rounded-2xl border border-line-2 bg-panel/70 shadow-2xl backdrop-blur-xl [transform-style:preserve-3d]"
+        className="border-grad relative max-w-full overflow-hidden rounded-2xl border border-line-2 bg-panel/70 shadow-2xl backdrop-blur-xl [transform-style:preserve-3d]"
       >
         {/* window chrome */}
         <div className="flex items-center justify-between border-b border-line px-4 py-2.5">
@@ -90,7 +90,7 @@ export function HeroPreview() {
             </div>
           </div>
           <div className="mt-3 -mx-1">
-            <Sparkline values={closes} up={up} width={340} height={88} className="w-full" />
+            <Sparkline values={closes} up={up} draw width={340} height={88} className="w-full" />
           </div>
         </div>
 
@@ -101,7 +101,13 @@ export function HeroPreview() {
           </div>
           <div className="space-y-1.5">
             {trades.slice(0, 3).map((t, i) => (
-              <div key={t.txHash + i} className="flex items-center gap-2 text-xs">
+              <div
+                key={t.txHash + i}
+                className={cn(
+                  "flex items-center gap-2 rounded-md px-1 py-0.5 text-xs",
+                  i === 0 && "row-flash",
+                )}
+              >
                 <span className={cn("w-7 font-semibold", t.side === "buy" ? "text-up" : "text-down")}>
                   {t.side === "buy" ? "Buy" : "Sell"}
                 </span>

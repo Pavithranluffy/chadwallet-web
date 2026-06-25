@@ -11,12 +11,15 @@ export function Sparkline({
   width = 320,
   height = 96,
   up = true,
+  draw = false,
   className,
 }: {
   values: number[];
   width?: number;
   height?: number;
   up?: boolean;
+  /** Animate the line drawing in once on mount. */
+  draw?: boolean;
   className?: string;
 }) {
   const id = useId();
@@ -52,7 +55,15 @@ export function Sparkline({
         </linearGradient>
       </defs>
       <path d={area} fill={`url(#g-${id})`} />
-      <path d={line} fill="none" stroke={stroke} strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
+      <path
+        d={line}
+        fill="none"
+        stroke={stroke}
+        strokeWidth="2"
+        strokeLinejoin="round"
+        strokeLinecap="round"
+        className={draw ? "spark-draw" : undefined}
+      />
     </svg>
   );
 }

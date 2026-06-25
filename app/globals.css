@@ -81,8 +81,63 @@
 .anim-line { animation: slide-up 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
 .anim-side { animation: fade-side 0.85s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
 
+/* Sparkline draw-in (cheap, transform-free) */
+@keyframes draw { to { stroke-dashoffset: 0; } }
+.spark-draw {
+  stroke-dasharray: 2000;
+  stroke-dashoffset: 2000;
+  animation: draw 1.3s cubic-bezier(0.4, 0.6, 0.2, 1) forwards;
+}
+/* Newest live-trade row highlight */
+@keyframes row-flash {
+  0% { background-color: #ccff0026; }
+  100% { background-color: transparent; }
+}
+.row-flash { animation: row-flash 1.1s ease-out; }
+
+/* Rocket launch on "Start trading": crouch, then blast up and off */
+@keyframes rocket-launch {
+  0% { transform: translate(0, 0) rotate(-12deg) scale(1); }
+  18% { transform: translate(-2px, 4px) rotate(-12deg) scale(0.92); }
+  45% { transform: translate(6px, -10px) rotate(-12deg) scale(1.05); }
+  100% { transform: translate(40px, -60px) rotate(-12deg) scale(0.6); opacity: 0; }
+}
+.rocket-launch { animation: rocket-launch 0.55s cubic-bezier(0.5, 0, 0.7, 0.2) forwards; }
+
+@keyframes rocket-exhaust {
+  0% { opacity: 0; transform: translateX(-50%) scaleY(0.3); }
+  30% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(-50%) translateY(22px) scaleY(2); }
+}
+.rocket-exhaust {
+  position: absolute;
+  left: 50%;
+  top: 60%;
+  width: 5px;
+  height: 13px;
+  border-radius: 99px;
+  background: linear-gradient(to bottom, #fff, #ccff00 40%, transparent);
+  filter: blur(0.5px);
+  animation: rocket-exhaust 0.5s ease-out forwards;
+}
+@keyframes btn-recoil {
+  0%, 100% { transform: none; }
+  20% { transform: translateY(2px) scale(0.985); }
+}
+.btn-recoil { animation: btn-recoil 0.5s ease-out; }
+
 * {
   border-color: var(--color-line);
+}
+
+/* Interactive elements always get the pointer cursor (Tailwind v4 preflight
+   leaves buttons on the default arrow, and bare text shows an I-beam). */
+button:not(:disabled),
+a,
+summary,
+[role="button"],
+label[for] {
+  cursor: pointer;
 }
 
 html {
@@ -188,11 +243,7 @@ body {
   pointer-events: none;
 }
 
-.pause-on-hover:hover [class*="animate-marquee"] {
-  animation-play-state: paused;
-}
-
-/* ---- scroll-reveal base state (GSAP toggles .is-in) ---- */
+/* ---- scroll-reveal base state (IntersectionObserver toggles .is-in) ---- */
 .reveal {
   opacity: 0;
   transform: translateY(22px);

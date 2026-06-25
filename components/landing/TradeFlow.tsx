@@ -1,12 +1,12 @@
 "use client";
 
-import Link from "next/link";
 import { useRef } from "react";
 import { Search, LineChart, Rocket, Trophy, type LucideIcon } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { Reveal } from "@/components/motion/Reveal";
+import { StartTradingButton } from "./StartTradingButton";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -62,12 +62,7 @@ function CtaCard() {
       <h3 className="font-display text-2xl font-bold text-ink">
         Your turn to <span className="text-chad">print.</span>
       </h3>
-      <Link
-        href="/trade"
-        className="inline-flex items-center gap-2 rounded-xl bg-chad px-5 py-2.5 text-sm font-semibold text-base transition-opacity hover:opacity-90"
-      >
-        <Rocket className="h-4 w-4" /> Start trading
-      </Link>
+      <StartTradingButton size="md" />
     </article>
   );
 }

@@ -5,8 +5,13 @@ import { APP } from "@/lib/constants";
 
 export function Footer() {
   return (
-    <footer className="border-t border-line bg-base-2">
-      <div className="mx-auto max-w-[1600px] px-4 py-12 sm:px-6">
+    <footer className="relative overflow-hidden border-t border-line bg-base-2">
+      <div className="grid-bg pointer-events-none absolute inset-x-0 top-0 h-48 opacity-40" />
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-40"
+        style={{ background: "radial-gradient(60% 100% at 50% 0%, #ccff000f 0%, transparent 70%)" }}
+      />
+      <div className="relative mx-auto max-w-[1600px] px-4 py-12 sm:px-6">
         <div className="flex flex-col gap-10 md:flex-row md:justify-between">
           <div className="max-w-xs">
             <Logo />

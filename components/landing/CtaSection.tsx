@@ -2,9 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Rocket } from "lucide-react";
-import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/motion/Reveal";
+import { StartTradingButton } from "./StartTradingButton";
 import { APP } from "@/lib/constants";
 
 export function CtaSection() {
@@ -20,11 +19,7 @@ export function CtaSection() {
             Get started in seconds. Sign in with Apple or Google — no seed phrase, no friction.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Link href="/trade">
-              <Button size="lg" className="btn-shine">
-                <Rocket className="h-5 w-5" /> Launch the app
-              </Button>
-            </Link>
+            <StartTradingButton label="Launch the app" />
           </div>
           <div className="mt-8 flex items-center justify-center gap-3">
             <Link href={APP.appStore} target="_blank" aria-label="Download on the App Store">
