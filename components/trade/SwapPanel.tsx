@@ -6,7 +6,7 @@ import { useAuth } from "@/app/providers";
 import { Button } from "@/components/ui/Button";
 import { TokenLogo } from "@/components/ui/TokenLogo";
 import { SOL_MINT } from "@/lib/constants";
-import { formatAmount, formatUsd } from "@/lib/format";
+import { formatAmount } from "@/lib/format";
 import { recordFill } from "@/lib/positions";
 import { cn } from "@/lib/cn";
 import type { Token } from "@/lib/types";
@@ -43,41 +43,47 @@ export function SwapPanel({ token }: { token?: Token }) {
 
   // Debounced live quote from Jupiter.
   useEffect(() => {
-    setDone(null);
-    const amt = parseFloat(amount);
-    if (!token || !amt || amt <= 0) {
-      setQuote(null);
-      setQuoteErr(null);
-      return;
-    }
-    const inputMint = side === "buy" ? SOL_MINT : token.address;
-    const outputMint = side === "buy" ? token.address : SOL_MINT;
-    const base = Math.round(amt * 10 ** inDecimals).toString();
-    const mySeq = ++seq.current;
-    setQuoting(true);
-    setQuoteErr(null);
-    const id = setTimeout(async () => {
-      try {
-        const res = await fetch(
-          `/api/jupiter/quote?inputMint=${inputMint}&outputMint=${outputMint}&amount=${base}&slippageBps=${Math.round(
-            slippage * 100,
-          )}`,
-        );
-        const json = await res.json();
-        if (mySeq !== seq.current) return;
-        if (!res.ok) {
-          setQuote(null);
-          setQuoteErr(json.error?.slice(0, 80) || "No route found");
-        } else {
-          setQuote(json.data);
-        }
-      } catch {
-        if (mySeq === seq.current) setQuoteErr("Quote failed");
-      } finally {
-        if (mySeq === seq.current) setQuoting(false);
+    let quoteId: number | undefined;
+    const id = window.setTimeout(() => {
+      setDone(null);
+      const amt = parseFloat(amount);
+      if (!token || !amt || amt <= 0) {
+        setQuote(null);
+        setQuoteErr(null);
+        return;
       }
-    }, 350);
-    return () => clearTimeout(id);
+      const inputMint = side === "buy" ? SOL_MINT : token.address;
+      const outputMint = side === "buy" ? token.address : SOL_MINT;
+      const base = Math.round(amt * 10 ** inDecimals).toString();
+      const mySeq = ++seq.current;
+      setQuoting(true);
+      setQuoteErr(null);
+      quoteId = window.setTimeout(async () => {
+        try {
+          const res = await fetch(
+            `/api/jupiter/quote?inputMint=${inputMint}&outputMint=${outputMint}&amount=${base}&slippageBps=${Math.round(
+              slippage * 100,
+            )}`,
+          );
+          const json = await res.json();
+          if (mySeq !== seq.current) return;
+          if (!res.ok) {
+            setQuote(null);
+            setQuoteErr(json.error?.slice(0, 80) || "No route found");
+          } else {
+            setQuote(json.data);
+          }
+        } catch {
+          if (mySeq === seq.current) setQuoteErr("Quote failed");
+        } finally {
+          if (mySeq === seq.current) setQuoting(false);
+        }
+      }, 350);
+    }, 0);
+    return () => {
+      window.clearTimeout(id);
+      if (quoteId !== undefined) window.clearTimeout(quoteId);
+    };
   }, [amount, side, slippage, token, inDecimals]);
 
   const outAmount = quote ? Number(quote.outAmount) / 10 ** outDecimals : 0;

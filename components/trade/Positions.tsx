@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { Wallet } from "lucide-react";
-import { useAuth } from "@/app/providers";
 import { useToken } from "@/lib/client";
 import { usePositions, type PositionRecord } from "@/lib/positions";
 import { TokenLogo } from "@/components/ui/TokenLogo";

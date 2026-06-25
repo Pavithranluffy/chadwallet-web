@@ -10,7 +10,8 @@ const variants: Record<Variant, string> = {
   primary:
     "bg-chad text-base font-semibold hover:bg-chad/90 shadow-[0_0_24px_-6px_#ccff0066]",
   ghost: "text-ink-dim hover:text-ink hover:bg-panel",
-  outline: "border border-line-2 text-ink hover:border-chad/60 hover:text-chad",
+  outline:
+    "border border-ink/25 bg-panel-2 text-ink hover:border-chad/70 hover:bg-panel hover:text-chad",
 };
 const sizes: Record<Size, string> = {
   sm: "h-8 px-3 text-sm rounded-lg",

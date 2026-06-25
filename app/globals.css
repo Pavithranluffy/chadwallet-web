@@ -1,35 +1,41 @@
 @import "tailwindcss";
 
 /* ===== ChadWallet brand tokens =====
-   Pulled from chadwallet.xyz: bg #080404, panels #101010, accent #ccff00 */
+   Brand palette (chadwallet.xyz): ground #080404, panels #101010,
+   acid-lime accent #ccff00. The accent is the one bold thing on the page —
+   everything else stays disciplined and near-monochrome so it can sing. */
 @theme {
   --color-base: #080404;
-  --color-base-2: #0d0a0a;
-  --color-panel: #101010;
-  --color-panel-2: #161616;
-  --color-line: #232323;
-  --color-line-2: #2e2e2e;
+  --color-base-2: #0c0908;
+  --color-panel: #100f0d;
+  --color-panel-2: #17150f;
+  --color-line: #232220;
+  --color-line-2: #312f2a;
 
-  --color-ink: #f5f5f0;
-  --color-ink-dim: #a8a8a2;
-  --color-ink-faint: #6b6b66;
+  --color-ink: #f6f6f0;
+  --color-ink-dim: #a6a6a0;
+  --color-ink-faint: #6a6a64;
 
   --color-chad: #ccff00;
   --color-chad-dim: #9bc400;
   --color-chad-glow: #ccff0033;
 
-  --color-up: #19e08a;
-  --color-up-soft: #19e08a1a;
+  --color-up: #2bf08f;
+  --color-up-soft: #2bf08f1a;
   --color-down: #ff4d5e;
   --color-down-soft: #ff4d5e1a;
 
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-display: var(--font-display), var(--font-geist-sans), sans-serif;
 
   --radius: 0.875rem;
 
-  --animate-marquee: marquee 40s linear infinite;
-  --animate-marquee-rev: marquee-rev 40s linear infinite;
+  --animate-marquee: marquee 38s linear infinite;
+  --animate-marquee-rev: marquee-rev 38s linear infinite;
+  --animate-shine: shine 6s linear infinite;
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-pulse-ring: pulse-ring 2.4s ease-out infinite;
 }
 
 @keyframes marquee {
@@ -40,6 +46,39 @@
   from { transform: translateX(-50%); }
   to { transform: translateX(0); }
 }
+@keyframes shine {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 var(--color-up-soft); }
+  70% { box-shadow: 0 0 0 7px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+/* ---- entrance animations (pure CSS, so content can never get stuck hidden) ----
+   `both` fill-mode applies the start state during the delay and the end state
+   after, so elements are hidden only while animating and always end visible. */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(22px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes slide-up {
+  from { transform: translateY(115%); }
+  to { transform: translateY(0); }
+}
+@keyframes fade-side {
+  from { opacity: 0; transform: translateX(36px) scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
+
+.anim-up { animation: fade-up 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.anim-line { animation: slide-up 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.anim-side { animation: fade-side 0.85s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
 
 * {
   border-color: var(--color-line);
@@ -49,6 +88,7 @@ html {
   background: var(--color-base);
   color-scheme: dark;
   scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -56,6 +96,13 @@ body {
   color: var(--color-ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Display headings — tight tracking, optical balance */
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
 }
 
 /* Numeric/tabular figures for prices */
@@ -64,21 +111,107 @@ body {
   font-feature-settings: "tnum";
 }
 
-/* Hide scrollbars where we manage our own scroll regions */
+/* Accent text that subtly glows so the one bold color reads as "live" */
+.text-glow {
+  text-shadow: 0 0 24px var(--color-chad-glow);
+}
+
+/* ---- scrollbars ---- */
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
 .scroll-thin::-webkit-scrollbar { width: 8px; height: 8px; }
 .scroll-thin::-webkit-scrollbar-thumb { background: var(--color-line-2); border-radius: 99px; }
+.scroll-thin::-webkit-scrollbar-thumb:hover { background: #3d3a33; }
 .scroll-thin::-webkit-scrollbar-track { background: transparent; }
 
-/* Subtle radial glow used behind hero + section headers */
+/* ---- atmosphere ---- */
+
+/* Faint terminal grid — evokes a trading screen without shouting */
+.grid-bg {
+  background-image:
+    linear-gradient(to right, #ffffff06 1px, transparent 1px),
+    linear-gradient(to bottom, #ffffff06 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 75%);
+}
+
+/* Radial accent glow used behind hero + section headers */
 .chad-glow {
   background:
-    radial-gradient(60% 60% at 50% 0%, #ccff0014 0%, transparent 70%),
-    radial-gradient(40% 40% at 80% 30%, #19e08a0f 0%, transparent 70%);
+    radial-gradient(48% 55% at 50% -5%, #ccff0018 0%, transparent 70%),
+    radial-gradient(40% 40% at 82% 20%, #2bf08f0f 0%, transparent 70%);
+}
+
+/* Subtle film grain so flat-black panels don't band on big displays */
+.grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Gradient hairline border for "premium" cards */
+.border-grad {
+  position: relative;
+  background-clip: padding-box;
+}
+.border-grad::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(140deg, #ccff0033, transparent 40%, transparent 60%, #ffffff10);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Sweeping highlight for the primary CTA */
+.btn-shine {
+  position: relative;
+  overflow: hidden;
+}
+.btn-shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 30%, #ffffff66 50%, transparent 70%);
+  background-size: 220% 100%;
+  animation: shine 5s linear infinite;
+  pointer-events: none;
 }
 
 .pause-on-hover:hover [class*="animate-marquee"] {
   animation-play-state: paused;
+}
+
+/* ---- scroll-reveal base state (GSAP toggles .is-in) ---- */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  will-change: opacity, transform;
+  transition:
+    opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .reveal { opacity: 1; transform: none; }
 }

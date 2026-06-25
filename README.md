@@ -1,36 +1,81 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ChadWallet — Web
 
-## Getting Started
+A fomo.family-style landing page **and** a full Solana trading terminal for the
+ChadWallet brand. Built with Next.js 16 (App Router) + Tailwind v4, animated with
+GSAP, and powered by live data from BirdEye, Jupiter and an RPC of your choice —
+with a deterministic mock layer so the whole app is alive even with no keys set.
 
-First, run the development server:
+## Run locally
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev        # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Production:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build && npm start
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+> Works immediately with **zero configuration** — it renders realistic simulated
+> market data and shows a small "Demo mode" banner. Add the keys below to go fully live.
 
-## Learn More
+## Environment variables
 
-To learn more about Next.js, take a look at the following resources:
+Create `.env.local` in the project root:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+# BirdEye Data API — trending tokens, prices, OHLCV, trades, holders
+# https://birdeye.so/data-api  (free tier available)
+BIRDEYE_API_KEY=
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Privy — Sign in with Apple / Google + embedded Solana wallet
+# https://privy.io  (free tier available)
+NEXT_PUBLIC_PRIVY_APP_ID=
 
-## Deploy on Vercel
+# Solana RPC — used by the embedded wallet to send swap transactions
+# https://www.alchemy.com/rpc-api  (free tier available)
+NEXT_PUBLIC_SOLANA_RPC_URL=
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# Jupiter — optional. Quotes/swaps work keyless on the free lite-api by default.
+# JUPITER_API_KEY=
+# JUPITER_BASE=https://lite-api.jup.ag
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+All integrations degrade gracefully: any missing key or failed upstream call
+falls back to the mock layer, so the UI is never empty.
+
+## Requirements coverage
+
+| Requirement | Status |
+| --- | --- |
+| ChadWallet brand (logo, palette, app links) | ✅ |
+| Sign in with Apple / Google via Privy | ✅ `app/providers.tsx` |
+| Solana support | ✅ |
+| Rotating token banners top **and** bottom; tap a token → trade page | ✅ `components/TokenBanner.tsx` |
+| Trading UI — left: trending list | ✅ `components/trade/TrendingList.tsx` |
+| Trading UI — middle: token info, price chart, holders, live trades | ✅ `ChartCard`, `TokenHeader`, `ActivityTabs` |
+| Trading UI — right: buy & sell, user positions | ✅ `SwapPanel`, `Positions` |
+| Live charts | ✅ TradingView Lightweight Charts |
+| Real data (BirdEye / Jupiter / RPC) | ✅ with mock fallback |
+
+## Architecture notes
+
+- **Data is server-rendered on first paint.** The landing and trade pages fetch
+  trending tokens (and, on the trade page, the active token's chart / trades /
+  holders) on the server and seed SWR's cache via `TrendingProvider`. The banner,
+  "Live on Solana" grid and trade panels are populated in the first HTML byte —
+  no loading flash and no dependency on a client fetch succeeding. SWR then
+  revalidates in the background. Pages are ISR-cached (`revalidate = 30`).
+- **Motion** is concentrated in one orchestrated hero entrance (GSAP timeline)
+  plus disciplined scroll reveals (`components/motion/`). All motion respects
+  `prefers-reduced-motion`.
+- **Swaps** are routed through Jupiter; transactions are signed and sent by the
+  Privy embedded Solana wallet. Without a wallet (demo), fills are simulated and
+  recorded to a local position ledger so the buy/sell loop is fully demonstrable.
+
+## Deploy (Vercel)
+
+Push to a Git repo, import into Vercel, add the env vars above in
+**Project → Settings → Environment Variables**, and deploy. No further config needed.

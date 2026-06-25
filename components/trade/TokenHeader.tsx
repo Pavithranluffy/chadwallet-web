@@ -28,7 +28,7 @@ export function TokenHeader({ token }: { token?: Token }) {
           <TokenLogo symbol={token.symbol} src={token.logoURI} size={48} />
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xl font-bold text-ink">{token.symbol}</h1>
+              <h1 className="font-display text-xl font-bold text-ink">{token.symbol}</h1>
               <span className="truncate text-sm text-ink-faint">{token.name}</span>
             </div>
             <div className="mt-1 flex items-center gap-2">
@@ -67,7 +67,7 @@ export function TokenHeader({ token }: { token?: Token }) {
         </div>
 
         <div className="flex items-end gap-3">
-          <div className="tnum text-2xl font-bold text-ink">{formatUsd(token.price)}</div>
+          <div className="font-display tnum text-2xl font-bold text-ink">{formatUsd(token.price)}</div>
           <div className={cn("tnum mb-1 text-sm font-semibold", changeColor(token.priceChange24h))}>
             {formatPct(token.priceChange24h)}
           </div>

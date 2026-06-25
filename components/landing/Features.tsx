@@ -1,4 +1,5 @@
 import { Users, Zap, LineChart, Crown, ShieldCheck, Flame } from "lucide-react";
+import { Reveal } from "@/components/motion/Reveal";
 
 const FEATURES = [
   {
@@ -23,8 +24,8 @@ const FEATURES = [
   },
   {
     icon: ShieldCheck,
-    title: "Lightning fast & safe",
-    body: "Self-custody by default with secure deposits and instant withdrawals. Your keys, your coins.",
+    title: "Self-custody, zero friction",
+    body: "Sign in with Apple or Google and get a secure embedded Solana wallet. Your keys, your coins.",
   },
   {
     icon: Flame,
@@ -35,30 +36,34 @@ const FEATURES = [
 
 export function Features() {
   return (
-    <section className="mx-auto max-w-[1200px] px-4 py-20 sm:px-6">
-      <div className="mx-auto max-w-2xl text-center">
-        <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+    <section className="mx-auto max-w-[1200px] px-4 py-24 sm:px-6">
+      <Reveal className="mx-auto max-w-2xl text-center">
+        <div className="mb-3 text-xs font-medium uppercase tracking-[0.2em] text-chad">
+          Built for degens
+        </div>
+        <h2 className="font-display text-3xl font-bold tracking-tight sm:text-[2.75rem]">
           Everything you need to <span className="text-chad">ape responsibly</span>
         </h2>
         <p className="mt-4 text-ink-dim">
-          A fast, social-first trading experience built for Solana degens who don&apos;t want to miss out.
+          A fast, social-first trading experience built for Solana traders who don&apos;t want to
+          miss out.
         </p>
-      </div>
+      </Reveal>
 
-      <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <Reveal stagger={0.08} className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {FEATURES.map((f) => (
           <div
             key={f.title}
-            className="group rounded-2xl border border-line bg-panel/50 p-6 transition-colors hover:border-chad/40 hover:bg-panel"
+            className="border-grad group relative overflow-hidden rounded-2xl border border-line bg-panel/40 p-6 transition-colors hover:border-chad/30 hover:bg-panel/70"
           >
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-chad/10 text-chad ring-1 ring-chad/20">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-chad/10 text-chad ring-1 ring-chad/20 transition-transform duration-300 group-hover:scale-110">
               <f.icon className="h-5 w-5" />
             </div>
-            <h3 className="mt-5 text-lg font-semibold text-ink">{f.title}</h3>
+            <h3 className="font-display mt-5 text-lg font-semibold text-ink">{f.title}</h3>
             <p className="mt-2 text-sm leading-relaxed text-ink-dim">{f.body}</p>
           </div>
         ))}
-      </div>
+      </Reveal>
     </section>
   );
 }

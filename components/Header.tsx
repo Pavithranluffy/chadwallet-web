@@ -16,10 +16,10 @@ const NAV = [
 export function Header() {
   const pathname = usePathname();
   return (
-    <header className="sticky top-0 z-30 border-b border-line bg-base/80 backdrop-blur-xl">
-      <div className="mx-auto flex h-16 max-w-[1600px] items-center gap-6 px-4 sm:px-6">
+    <header className="sticky top-0 z-30 border-b border-line bg-base/70 backdrop-blur-xl">
+      <div className="mx-auto flex h-16 max-w-[1600px] items-center gap-4 px-4 sm:gap-6 sm:px-6">
         <Logo />
-        <nav className="hidden items-center gap-1 md:flex">
+        <nav className="flex items-center gap-0.5">
           {NAV.map((n) => {
             const active = n.href === "/" ? pathname === "/" : pathname.startsWith(n.href);
             return (
@@ -41,7 +41,7 @@ export function Header() {
           <Link
             href={APP.appStore}
             target="_blank"
-            className="hidden h-9 items-center gap-1.5 rounded-lg border border-line-2 px-3 text-sm text-ink-dim transition-colors hover:text-ink lg:flex"
+            className="hidden h-9 items-center gap-1.5 rounded-lg border border-line-2 px-3 text-sm text-ink-dim transition-colors hover:border-chad/40 hover:text-ink lg:flex"
             aria-label="Download on the App Store"
           >
             <Apple className="h-4 w-4" /> iOS
@@ -49,7 +49,7 @@ export function Header() {
           <Link
             href={APP.playStore}
             target="_blank"
-            className="hidden h-9 items-center gap-1.5 rounded-lg border border-line-2 px-3 text-sm text-ink-dim transition-colors hover:text-ink lg:flex"
+            className="hidden h-9 items-center gap-1.5 rounded-lg border border-line-2 px-3 text-sm text-ink-dim transition-colors hover:border-chad/40 hover:text-ink lg:flex"
             aria-label="Get it on Google Play"
           >
             <Play className="h-4 w-4" /> Android

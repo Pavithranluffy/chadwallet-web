@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
 // Lightweight client-side position ledger. Records fills (real swaps in live
 // mode, simulated fills in demo mode) so the "Your position" panel reflects the
@@ -29,6 +29,28 @@ function read(): Record<string, PositionRecord> {
 function write(data: Record<string, PositionRecord>) {
   localStorage.setItem(KEY, JSON.stringify(data));
   window.dispatchEvent(new Event(EVT));
+}
+
+// useSyncExternalStore requires a snapshot that keeps the SAME reference when
+// the data hasn't changed — otherwise React loops. We cache the parsed array
+// against the raw localStorage string and only recompute when that string
+// changes.
+const EMPTY: PositionRecord[] = [];
+let snapStr: string | null = null;
+let snapVal: PositionRecord[] = EMPTY;
+
+function getSnapshot(): PositionRecord[] {
+  if (typeof window === "undefined") return EMPTY;
+  const str = localStorage.getItem(KEY) || "{}";
+  if (str !== snapStr) {
+    snapStr = str;
+    try {
+      snapVal = Object.values(JSON.parse(str) as Record<string, PositionRecord>);
+    } catch {
+      snapVal = EMPTY;
+    }
+  }
+  return snapVal;
 }
 
 export function recordFill(fill: {
@@ -62,17 +84,18 @@ export function recordFill(fill: {
 }
 
 export function usePositions(): PositionRecord[] {
-  const [positions, setPositions] = useState<PositionRecord[]>([]);
-  const refresh = useCallback(() => setPositions(Object.values(read())), []);
-  useEffect(() => {
-    refresh();
-    const onChange = () => refresh();
-    window.addEventListener(EVT, onChange);
-    window.addEventListener("storage", onChange);
-    return () => {
-      window.removeEventListener(EVT, onChange);
-      window.removeEventListener("storage", onChange);
-    };
-  }, [refresh]);
-  return positions;
+  return useSyncExternalStore(
+    (callback) => {
+      if (typeof window === "undefined") return () => {};
+      const onChange = () => callback();
+      window.addEventListener(EVT, onChange);
+      window.addEventListener("storage", onChange);
+      return () => {
+        window.removeEventListener(EVT, onChange);
+        window.removeEventListener("storage", onChange);
+      };
+    },
+    getSnapshot,
+    () => EMPTY,
+  );
 }

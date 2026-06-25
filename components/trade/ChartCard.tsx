@@ -1,9 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { useOhlcv } from "@/lib/client";
-import { PriceChart } from "./PriceChart";
 import { cn } from "@/lib/cn";
+
+// Code-split the charting library (lightweight-charts) into its own chunk so it
+// never blocks the rest of the trade page's JS.
+const PriceChart = dynamic(() => import("./PriceChart").then((m) => m.PriceChart), {
+  ssr: false,
+  loading: () => <div className="h-full w-full animate-pulse bg-panel/20" />,
+});
 
 const RESOLUTIONS = ["5m", "15m", "1H", "4H", "1D"] as const;
 
