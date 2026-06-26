@@ -1,0 +1,27 @@
+# Netlify deployment config for ChadWallet (Next.js 16, App Router).
+# The official Next runtime plugin handles SSR, API routes (incl. /api/qr),
+# and ISR — no extra adapter or `output` setting required.
+
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  # Match the Node version used in development (Next 16 needs Node >= 20).
+  NODE_VERSION = "22"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# ---------------------------------------------------------------------------
+# Environment variables are NOT committed (.env.local is gitignored). Set these
+# in Netlify → Site settings → Environment variables before deploying:
+#
+#   NEXT_PUBLIC_PRIVY_APP_ID    Apple/Google sign-in + embedded Solana wallet
+#   NEXT_PUBLIC_SOLANA_RPC_URL  RPC endpoint used to send swap transactions
+#   BIRDEYE_API_KEY             live trending/prices/charts/holders/trades
+#
+# NEXT_PUBLIC_* values are inlined at build time, so they must be present
+# BEFORE the build runs. The app degrades to a realistic demo mode if any are
+# missing, so it deploys and renders even with none set.
+# ---------------------------------------------------------------------------

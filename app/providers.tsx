@@ -2,8 +2,14 @@
 
 import { createContext, useCallback, useContext, useMemo, useState } from "react";
 import { PrivyProvider, usePrivy } from "@privy-io/react-auth";
-import { useSignAndSendTransaction, useWallets } from "@privy-io/react-auth/solana";
+import {
+  useFundWallet,
+  useSignAndSendTransaction,
+  useWallets,
+} from "@privy-io/react-auth/solana";
 import { Apple, Mail, X } from "lucide-react";
+import { DepositProvider } from "@/components/deposit/Deposit";
+import { DEMO_WALLET } from "@/lib/constants";
 
 // ---- Unified auth surface consumed by the UI ----
 export interface ChadAuth {
@@ -16,6 +22,8 @@ export interface ChadAuth {
   logout: () => void;
   /** Sign + send a base64 (v0) transaction with the embedded wallet. Returns the signature. */
   signAndSendBase64?: (b64: string) => Promise<string>;
+  /** Open Privy's funding flow (card on-ramp / transfer) for the embedded wallet. */
+  fund?: () => Promise<void>;
 }
 
 const AuthContext = createContext<ChadAuth | null>(null);
@@ -58,6 +66,7 @@ function LiveAuthBridge({ children }: { children: React.ReactNode }) {
   const { ready, authenticated, user, login, logout } = usePrivy();
   const { wallets } = useWallets();
   const { signAndSendTransaction } = useSignAndSendTransaction();
+  const { fundWallet } = useFundWallet();
 
   const wallet = wallets[0];
   const walletAddress = wallet?.address;
@@ -72,6 +81,11 @@ function LiveAuthBridge({ children }: { children: React.ReactNode }) {
     [wallet, signAndSendTransaction],
   );
 
+  const fund = useCallback(async () => {
+    if (!walletAddress) return;
+    await fundWallet({ address: walletAddress });
+  }, [fundWallet, walletAddress]);
+
   const value = useMemo<ChadAuth>(
     () => ({
       enabled: true,
@@ -82,11 +96,16 @@ function LiveAuthBridge({ children }: { children: React.ReactNode }) {
       login,
       logout,
       signAndSendBase64,
+      fund,
     }),
-    [ready, authenticated, walletAddress, user, login, logout, signAndSendBase64],
+    [ready, authenticated, walletAddress, user, login, logout, signAndSendBase64, fund],
   );
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      <DepositProvider>{children}</DepositProvider>
+    </AuthContext.Provider>
+  );
 }
 
 function DemoAuthBridge({ children }: { children: React.ReactNode }) {
@@ -96,6 +115,7 @@ function DemoAuthBridge({ children }: { children: React.ReactNode }) {
       enabled: false,
       ready: true,
       authenticated: false,
+      walletAddress: DEMO_WALLET,
       login: () => setOpen(true),
       logout: () => {},
     }),
@@ -103,7 +123,7 @@ function DemoAuthBridge({ children }: { children: React.ReactNode }) {
   );
   return (
     <AuthContext.Provider value={value}>
-      {children}
+      <DepositProvider>{children}</DepositProvider>
       {open && <DemoSignInModal onClose={() => setOpen(false)} />}
     </AuthContext.Provider>
   );

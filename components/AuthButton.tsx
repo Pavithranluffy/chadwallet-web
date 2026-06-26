@@ -1,13 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { Wallet, ChevronDown, Copy, LogOut, Check } from "lucide-react";
+import { Wallet, ChevronDown, Copy, LogOut, Check, ArrowDownToLine } from "lucide-react";
 import { useAuth } from "@/app/providers";
+import { useDeposit } from "@/components/deposit/Deposit";
 import { Button } from "@/components/ui/Button";
 import { shortAddr } from "@/lib/format";
 
 export function AuthButton({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
   const auth = useAuth();
+  const deposit = useDeposit();
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -37,6 +39,16 @@ export function AuthButton({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
           <div className="absolute right-0 z-50 mt-2 w-56 rounded-xl border border-line-2 bg-panel p-1.5 shadow-2xl">
+            <button
+              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm font-medium text-chad hover:bg-chad/[0.08]"
+              onClick={() => {
+                setOpen(false);
+                deposit.open();
+              }}
+            >
+              <ArrowDownToLine className="h-4 w-4" />
+              Deposit SOL
+            </button>
             {auth.walletAddress && (
               <button
                 className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-ink-dim hover:bg-panel-2 hover:text-ink"

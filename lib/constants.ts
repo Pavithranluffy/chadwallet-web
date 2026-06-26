@@ -15,6 +15,11 @@ export const APP = {
 export const SOL_MINT = "So11111111111111111111111111111111111111112";
 export const USDC_MINT = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
 
+// A clearly-labelled placeholder address so the Deposit sheet is fully
+// demonstrable with zero config (no Privy key). Replaced by the user's real
+// embedded-wallet address as soon as Privy is wired and they sign in.
+export const DEMO_WALLET = "Chadw4LLetDemo5oLanaAddre55Preview11111111";
+
 // Tokens we seed the trending banner + list with when BirdEye returns nothing
 // (or no key is configured). These are real, well-known Solana mints.
 export const SEED_MINTS: { address: string; symbol: string; name: string }[] = [

@@ -59,6 +59,8 @@ falls back to the mock layer, so the UI is never empty.
 | Trading UI — right: buy & sell, user positions | ✅ `SwapPanel`, `Positions` |
 | Live charts | ✅ TradingView Lightweight Charts |
 | Real data (BirdEye / Jupiter / RPC) | ✅ with mock fallback |
+| Deposit / add funds (QR + address + Privy on-ramp) | ✅ `components/deposit/Deposit.tsx`, `app/api/qr` |
+| Privacy Policy & Terms of Service | ✅ `/privacy`, `/terms` |
 
 ## Architecture notes
 
@@ -77,8 +79,27 @@ falls back to the mock layer, so the UI is never empty.
 - **Swaps** are routed through Jupiter; transactions are signed and sent by the
   Privy embedded Solana wallet. Without a wallet (demo), fills are simulated and
   recorded to a local position ledger so the buy/sell loop is fully demonstrable.
+- **Funding** (`Deposit`) is reachable from the header menu, the positions panel,
+  and `?deposit` deep links. It shows a scannable QR + the wallet address (served
+  by `/api/qr` as an SVG generated server-side) and, when Privy is live, a
+  card / transfer on-ramp via `useFundWallet`. It is fully demoable with zero
+  config — a clearly-labelled sample address renders in demo mode.
 
-## Deploy (Vercel)
+## Deploy
 
-Push to a Git repo, import into Vercel, add the env vars above in
-**Project → Settings → Environment Variables**, and deploy. No further config needed.
+`.env.local` is gitignored, so set the keys in your host's dashboard. Because
+`NEXT_PUBLIC_*` values are inlined at build time, they must be present **before**
+the build runs. The app degrades to demo mode if any are missing, so it deploys
+and renders even with none set.
+
+### Netlify (recommended for this repo)
+
+A `netlify.toml` is included. Import the repo into Netlify (the official
+`@netlify/plugin-nextjs` runtime is wired up — SSR, API routes and ISR all work
+with no extra config), add the env vars under **Site settings → Environment
+variables**, and deploy. Node version is pinned to 22 via `netlify.toml` / `.nvmrc`.
+
+### Vercel
+
+Import the repo, add the env vars under **Project → Settings → Environment
+Variables**, and deploy. No further config needed.

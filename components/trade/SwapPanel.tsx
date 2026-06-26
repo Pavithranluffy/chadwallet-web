@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Loader2, Check, ExternalLink, Settings2, ArrowDown } from "lucide-react";
+import { Loader2, Check, ExternalLink, Settings2, ArrowDown, ArrowDownToLine } from "lucide-react";
 import { useAuth } from "@/app/providers";
+import { useDeposit } from "@/components/deposit/Deposit";
 import { Button } from "@/components/ui/Button";
 import { TokenLogo } from "@/components/ui/TokenLogo";
 import { SOL_MINT } from "@/lib/constants";
@@ -24,6 +25,7 @@ const SELL_PRESETS = [25, 50, 100];
 
 export function SwapPanel({ token, initialSide = "buy" }: { token?: Token; initialSide?: Side }) {
   const auth = useAuth();
+  const deposit = useDeposit();
   const [side, setSide] = useState<Side>(initialSide);
   const [amount, setAmount] = useState("");
   const [slippage, setSlippage] = useState(1);
@@ -260,6 +262,15 @@ export function SwapPanel({ token, initialSide = "buy" }: { token?: Token; initi
           `Sell ${token?.symbol ?? ""}`
         )}
       </Button>
+
+      {auth.authenticated && (
+        <button
+          onClick={deposit.open}
+          className="-mt-1 flex items-center justify-center gap-1.5 text-xs font-medium text-ink-faint transition-colors hover:text-chad"
+        >
+          <ArrowDownToLine className="h-3.5 w-3.5" /> Add funds to your wallet
+        </button>
+      )}
 
       {done && (
         <div className="flex items-start gap-2 rounded-xl border border-up/30 bg-up-soft p-3 text-sm">
