@@ -10,6 +10,13 @@
   # Match the Node version used in development (Next 16 needs Node >= 20).
   NODE_VERSION = "22"
 
+  # NEXT_PUBLIC_* values are PUBLIC by design — Next.js inlines them into the
+  # browser bundle so the client can use them (e.g. the Privy App ID). Netlify's
+  # secrets scanner otherwise flags them as leaked secrets and fails the build.
+  # We exempt only the public keys; real secrets (e.g. BIRDEYE_API_KEY) stay
+  # scanned, so an accidental leak of those would still fail the build.
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_PRIVY_APP_ID,NEXT_PUBLIC_SOLANA_RPC_URL"
+
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
